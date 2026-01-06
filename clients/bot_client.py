@@ -1,5 +1,6 @@
 import discord
 from ui.views import LinksView, RulesView
+from config import settings
 
 
 class BotClient(discord.Client):
@@ -44,3 +45,19 @@ class BotClient(discord.Client):
                 inline=True,
             )
             await message.channel.send(embed=embed, view=RulesView())
+
+    async def on_member_join(self, member):
+        role = member.guild.get_role(settings.AUTO_ROLE_ID)
+
+        if role:
+            try:
+                await member.add_roles(role)
+                print(f"Assigned role {role.name} to {member.display_name}")
+            except discord.Forbidden:
+                print(
+                    f"Error: No permission to assign role {role.name} to {member.display_name}"
+                )
+        else:
+            print(
+                f"Error: Role with ID {settings.AUTO_ROLE_ID} not found in guild {member.guild.name}"
+            )
