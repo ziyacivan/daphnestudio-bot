@@ -23,6 +23,12 @@ class BotClient(commands.Bot):
     async def on_ready(self):
         print(f"Logged on as {self.user}")
 
+        # Set bot status
+        activity = discord.Activity(
+            type=discord.ActivityType.listening, name="docs.daphnestudio.net"
+        )
+        await self.change_presence(activity=activity, status=discord.Status.online)
+
     async def on_member_join(self, member):
         role = member.guild.get_role(settings.AUTO_ROLE_ID)
 
