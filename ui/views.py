@@ -321,31 +321,3 @@ class DynamicEmbedView(discord.ui.View):
     def __init__(self, embed_data=None):
         super().__init__(timeout=None)
         self.embed_data = embed_data or {"fields": []}
-
-    @discord.ui.button(label="Edit", style=discord.ButtonStyle.secondary)
-    async def edit_embed(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ):
-        if not any(
-            role.id in settings.EMBED_CREATOR_ROLES for role in interaction.user.roles
-        ):
-            await interaction.response.send_message(
-                "You don't have permission to use this.", ephemeral=True
-            )
-            return
-        modal = EditEmbedModal(self.embed_data)
-        await interaction.response.send_modal(modal)
-
-    @discord.ui.button(label="Delete", style=discord.ButtonStyle.danger)
-    async def delete_embed(
-        self, interaction: discord.Interaction, button: discord.ui.Button
-    ):
-        if not any(
-            role.id in settings.EMBED_CREATOR_ROLES for role in interaction.user.roles
-        ):
-            await interaction.response.send_message(
-                "You don't have permission to use this.", ephemeral=True
-            )
-            return
-        await interaction.message.delete()
-        await interaction.response.send_message("Embed deleted.", ephemeral=True)
